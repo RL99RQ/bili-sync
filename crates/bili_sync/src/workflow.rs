@@ -548,6 +548,11 @@ pub async fn fetch_page_poster(
     if !should_run {
         return Ok(ExecutionStatus::Skipped);
     }
+    // 检查本地文件是否已存在
+    if cx.config.skip_option.skip_existing_files && poster_path.exists() {
+        info!("封面文件已存在，跳过下载: {:?}", poster_path);
+        return Ok(ExecutionStatus::Succeeded);
+    }
     let single_page = video_model.single_page.context("single_page is null")?;
     let url = if single_page {
         // 单页视频直接用视频的封面
@@ -577,6 +582,11 @@ pub async fn fetch_page_video(
 ) -> Result<ExecutionStatus> {
     if !should_run {
         return Ok(ExecutionStatus::Skipped);
+    }
+    // 检查本地视频文件是否已存在
+    if cx.config.skip_option.skip_existing_files && page_path.exists() {
+        info!("视频文件已存在，跳过下载: {:?}", page_path);
+        return Ok(ExecutionStatus::Succeeded);
     }
     let bili_video = Video::new(cx.bili_client, video_model.bvid.clone(), &cx.config.credential);
     let streams = bili_video
@@ -632,6 +642,11 @@ pub async fn fetch_page_danmaku(
     if !should_run {
         return Ok(ExecutionStatus::Skipped);
     }
+    // 检查本地弹幕文件是否已存在
+    if cx.config.skip_option.skip_existing_files && danmaku_path.exists() {
+        info!("弹幕文件已存在，跳过下载: {:?}", danmaku_path);
+        return Ok(ExecutionStatus::Succeeded);
+    }
     let bili_video = Video::new(cx.bili_client, video_model.bvid.clone(), &cx.config.credential);
     bili_video
         .get_danmaku_writer(page_info)
@@ -650,6 +665,11 @@ pub async fn fetch_page_subtitle(
 ) -> Result<ExecutionStatus> {
     if !should_run {
         return Ok(ExecutionStatus::Skipped);
+    }
+    // 检查本地字幕文件是否已存在
+    if cx.config.skip_option.skip_existing_files && subtitle_path.exists() {
+        info!("字幕文件已存在，跳过下载: {:?}", subtitle_path);
+        return Ok(ExecutionStatus::Succeeded);
     }
     let bili_video = Video::new(cx.bili_client, video_model.bvid.clone(), &cx.config.credential);
     let subtitles = bili_video.get_subtitles(page_info).await?;
@@ -694,6 +714,11 @@ pub async fn fetch_video_poster(
     if !should_run {
         return Ok(ExecutionStatus::Skipped);
     }
+    // 检查本地视频封面是否已存在
+    if cx.config.skip_option.skip_existing_files && poster_path.exists() {
+        info!("视频封面已存在，跳过下载: {:?}", poster_path);
+        return Ok(ExecutionStatus::Succeeded);
+    }
     cx.downloader
         .fetch(&video_model.cover, &poster_path, &cx.config.concurrent_limit.download)
         .await?;
@@ -709,6 +734,11 @@ pub async fn fetch_upper_face(
 ) -> Result<ExecutionStatus> {
     if !should_run {
         return Ok(ExecutionStatus::Skipped);
+    }
+    // 检查本地UP主头像是否已存在
+    if cx.config.skip_option.skip_existing_files && upper_face_path.exists() {
+        info!("UP主头像已存在，跳过下载: {:?}", upper_face_path);
+        return Ok(ExecutionStatus::Succeeded);
     }
     cx.downloader
         .fetch(

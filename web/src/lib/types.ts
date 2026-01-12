@@ -261,6 +261,7 @@ export interface SkipOption {
 	no_upper: boolean;
 	no_danmaku: boolean;
 	no_subtitle: boolean;
+	skip_existing_files: boolean;
 }
 
 export interface RateLimit {

@@ -67,6 +67,9 @@ pub struct SkipOption {
     pub no_upper: bool,
     pub no_danmaku: bool,
     pub no_subtitle: bool,
+    /// 如果本地已存在对应文件，跳过下载
+    #[serde(default)]
+    pub skip_existing_files: bool,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
