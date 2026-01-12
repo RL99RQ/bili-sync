@@ -694,6 +694,11 @@ pub async fn generate_page_nfo(
     if !should_run {
         return Ok(ExecutionStatus::Skipped);
     }
+    // 检查本地NFO文件是否已存在
+    if cx.config.skip_option.skip_existing_files && nfo_path.exists() {
+        info!("NFO文件已存在，跳过生成: {:?}", nfo_path);
+        return Ok(ExecutionStatus::Succeeded);
+    }
     let single_page = video_model.single_page.context("single_page is null")?;
     let nfo = if single_page {
         NFO::Movie(video_model.to_nfo(cx.config.nfo_time_type))
@@ -759,6 +764,11 @@ pub async fn generate_upper_nfo(
     if !should_run {
         return Ok(ExecutionStatus::Skipped);
     }
+    // 检查本地UP主NFO文件是否已存在
+    if cx.config.skip_option.skip_existing_files && nfo_path.exists() {
+        info!("UP主NFO文件已存在，跳过生成: {:?}", nfo_path);
+        return Ok(ExecutionStatus::Succeeded);
+    }
     generate_nfo(NFO::Upper(video_model.to_nfo(cx.config.nfo_time_type)), nfo_path).await?;
     Ok(ExecutionStatus::Succeeded)
 }
@@ -771,6 +781,11 @@ pub async fn generate_video_nfo(
 ) -> Result<ExecutionStatus> {
     if !should_run {
         return Ok(ExecutionStatus::Skipped);
+    }
+    // 检查本地视频NFO文件是否已存在
+    if cx.config.skip_option.skip_existing_files && nfo_path.exists() {
+        info!("视频NFO文件已存在，跳过生成: {:?}", nfo_path);
+        return Ok(ExecutionStatus::Succeeded);
     }
     generate_nfo(NFO::TVShow(video_model.to_nfo(cx.config.nfo_time_type)), nfo_path).await?;
     Ok(ExecutionStatus::Succeeded)

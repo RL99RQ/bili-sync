@@ -653,7 +653,7 @@
 							<Label for="skip-existing">跳过已存在的本地文件</Label>
 						</div>
 						<p class="text-muted-foreground text-xs ml-8">
-							启用后，如果本地已有对应的视频/封面/弹幕/字幕文件，将跳过下载（适用于数据库丢失后恢复）
+							启用后，如果本地已有对应文件，将跳过下载（适用于数据库丢失后恢复）
 						</p>
 					</div>
 				</Tabs.Content>
